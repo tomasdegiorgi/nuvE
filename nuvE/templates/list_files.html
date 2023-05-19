@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>List Files</title>
+</head>
+<body>
+    <h1>List Files of {{ current_user.id }}</h1>
+    <ul>
+        {% for file in files %}
+        <div>
+            <p>File ID: {{ file.id }}</p>
+            <p>Filename: {{ file.filename }}</p>
+            <p>Size: {{ file.size }}</p>
+            <p>Mimetype: {{ file.mimetype }}</p>
+            <p>ID of user: {{ file.iduser }}</p>
+            <p>Share Link: <a href="{{ url_for('share_file', share_link=file.share_link) }}">{{ request.host_url }}{{ url_for('share_file', share_link=file.share_link) }}</a></p>            <a href="{{ url_for('download', id=file.id) }}" class="btn btn-primary">Download</a>
+            {% if file.iduser == current_user.id %}
+                <form method="POST" action="{{ url_for('delete_file', id=file.id) }}" onsubmit="return confirm('Are you sure you want to delete this file?')">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            {% endif %}
+        </div>
+        <hr>
+        {% endfor %}
+    </ul>
+    <form method="post" action="{{ url_for('upload_file') }}" enctype="multipart/form-data">
+        <input type="file" name="file" id="fileInput">
+        <input type="submit" value="Upload" id="uploadButton" enabled>
+    </form>
+</body>
+</html>
